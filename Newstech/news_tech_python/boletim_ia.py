@@ -1,26 +1,3 @@
-"""
-03_boletim_ia.py
-================
-
-Projeto final da aula: Agente Editorial com Gemini.
-
-Objetivo da aula:
-Mostrar que o mesmo código pode gerar resultados diferentes
-dependendo do prompt ativo escolhido no arquivo prompt.py.
-
-Como testar:
-1. Abra o arquivo prompt.py.
-2. Escolha o prompt ativo comentando/descomentando:
-   - prompt_fraco
-   - prompt_intermediario
-   - prompt_pro_agente
-3. Rode no terminal:
-
-   python 03_boletim_ia.py
-
-O foco da aula é entender o prompt, não complicar o código.
-"""
-
 from __future__ import annotations
 
 import os
