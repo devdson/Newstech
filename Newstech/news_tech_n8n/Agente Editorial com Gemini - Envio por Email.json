@@ -1,0 +1,351 @@
+{
+  "name": "Agente Editorial com Gemini - Envio por Email",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "915bf11c-fc51-4354-ad18-c26d743990d9",
+      "name": "Executar Manualmente",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        656
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * 1-5"
+            }
+          ]
+        }
+      },
+      "id": "b46c6389-f93a-4c92-9cc9-30b07627c746",
+      "name": "Agendar Envio",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -144,
+        880
+      ],
+      "disabled": true,
+      "notes": "Ative este nó apenas quando quiser rodar automaticamente. Para aula, use o nó Executar Manualmente."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c1c44e39-a3a7-4e83-91f3-724ab0010001",
+              "name": "modo_prompt",
+              "value": "pro_agente",
+              "type": "string"
+            },
+            {
+              "id": "c1c44e39-a3a7-4e83-91f3-724ab0010002",
+              "name": "email_destino",
+              "value": "nayara.valevskii@gmail.com",
+              "type": "string"
+            },
+            {
+              "id": "c1c44e39-a3a7-4e83-91f3-724ab0010003",
+              "name": "tema",
+              "value": "Tendências em IA e automação para aprendizagem prática",
+              "type": "string"
+            },
+            {
+              "id": "c1c44e39-a3a7-4e83-91f3-724ab0010004",
+              "name": "publico",
+              "value": "Alunos iniciantes e intermediários em dados, IA, automação e programação",
+              "type": "string"
+            },
+            {
+              "id": "c1c44e39-a3a7-4e83-91f3-724ab0010005",
+              "name": "data_execucao",
+              "value": "={{ $now.setZone('America/Fortaleza').toFormat('dd/MM/yyyy') }}",
+              "type": "string"
+            },
+            {
+              "id": "c1c44e39-a3a7-4e83-91f3-724ab0010006",
+              "name": "prompt_fraco",
+              "value": "Crie uma newsletter sobre inteligência artificial.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ab769cd9-f5c1-4c34-ba7c-796f8826a96b",
+      "name": "Configurar Execução e Prompts",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        144,
+        656
+      ],
+      "notes": "Altere apenas o campo modo_prompt para testar: fraco, intermediario ou pro_agente. Altere também email_destino antes de executar."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c1c44e39-a3a7-4e83-91f3-724ab0020001",
+              "name": "modo_prompt",
+              "value": "={{ $json.modo_prompt }}",
+              "type": "string"
+            },
+            {
+              "id": "c1c44e39-a3a7-4e83-91f3-724ab0020002",
+              "name": "email_destino",
+              "value": "={{ $json.email_destino }}",
+              "type": "string"
+            },
+            {
+              "id": "c1c44e39-a3a7-4e83-91f3-724ab0020003",
+              "name": "tema",
+              "value": "={{ $json.tema }}",
+              "type": "string"
+            },
+            {
+              "id": "c1c44e39-a3a7-4e83-91f3-724ab0020004",
+              "name": "publico",
+              "value": "={{ $json.publico }}",
+              "type": "string"
+            },
+            {
+              "id": "c1c44e39-a3a7-4e83-91f3-724ab0020005",
+              "name": "data_execucao",
+              "value": "={{ $json.data_execucao }}",
+              "type": "string"
+            },
+            {
+              "id": "c1c44e39-a3a7-4e83-91f3-724ab0020006",
+              "name": "system_prompt_ativo",
+              "value": "={{ $json.prompt_fraco }}",
+              "type": "string"
+            },
+            {
+              "id": "c1c44e39-a3a7-4e83-91f3-724ab0020007",
+              "name": "tarefa_para_agente",
+              "value": "={{ [\n  'DATA DA EDIÇÃO: ' + $json.data_execucao,\n  '',\n  'TEMA: ' + $json.tema,\n  '',\n  'PÚBLICO: ' + $json.publico,\n  '',\n  'DESTINATÁRIO DO E-MAIL: ' + $json.email_destino,\n  '',\n  'SYSTEM PROMPT ATIVO:',\n  $json.system_prompt_ativo,\n  '',\n  'TAREFA DO AGENTE:',\n  'Gere o boletim conforme o system prompt ativo.',\n  'Depois envie o conteúdo por e-mail para o destinatário informado usando a ferramenta Gmail disponível.',\n  'O assunto do e-mail deve ser: Boletim IA & Tecnologia - ' + $json.data_execucao,\n  '',\n  'IMPORTANTE:',\n  '- Se o prompt ativo for fraco ou intermediário, siga exatamente o que ele pedir.',\n  '- Se o prompt ativo for profissional, gere o corpo do e-mail em HTML profissional.',\n  '- Não explique o processo. Execute a tarefa.'\n].join('\\n') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "17bbd180-4fb6-4ad9-83c1-b2f50fb220f2",
+      "name": "Escolher System Prompt Ativo",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        656
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.tarefa_para_agente }}",
+        "options": {
+          "systemMessage": "={{ $json.system_prompt_ativo }}",
+          "maxIterations": 5,
+          "returnIntermediateSteps": false
+        }
+      },
+      "id": "4188d271-cfa7-4b42-805c-59ea7a3ccf1b",
+      "name": "Agente Editorial",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        720,
+        656
+      ],
+      "notes": "Este é o centro da aula: o agente usa o System Prompt ativo e a ferramenta Gmail para enviar o boletim."
+    },
+    {
+      "parameters": {
+        "options": {
+          "maxOutputTokens": 3000,
+          "temperature": 0.4
+        }
+      },
+      "id": "46dfb7dd-c26c-4548-b8a8-3bd4b696de51",
+      "name": "Google Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        576,
+        912
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "sLedhMwz5TwSp3iU",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', `Destinatário do e-mail`, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', `Assunto do e-mail`, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', `Corpo do e-mail. Se houver HTML, envie o HTML completo.`, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "9d648764-7bc3-424d-87ae-17c8b14eed47",
+      "name": "Enviar Email Gmail",
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        848,
+        912
+      ],
+      "webhookId": "3f9f9b3b-8e31-4b6a-97a8-5d57e314e007",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "9fWQoGJW1uGloHdE",
+          "name": "Gmail account"
+        }
+      },
+      "notes": "Ferramenta conectada ao agente. O agente decide usar esta ferramenta para enviar o boletim."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c1c44e39-a3a7-4e83-91f3-724ab0030001",
+              "name": "status_final",
+              "value": "={{ $json.output || $json.text || 'Execução finalizada. Verifique a caixa de e-mail e as execuções do agente.' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f02ce9d9-df05-48ce-aac2-df6eeda21587",
+      "name": "Resultado da Execução",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1056,
+        656
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Como usar\n\n1. Abra o nó **Configurar Execução e Prompts**.\n2. Altere `email_destino`.\n3. Escolha o `modo_prompt`:\n   - `fraco`\n   - `intermediario`\n   - `pro_agente`\n4. Execute pelo nó **Executar Manualmente**.\n5. Observe como o e-mail muda conforme o System Prompt ativo.\n\nPara automatizar, ative o nó **Agendar Envio**.",
+        "height": 340,
+        "width": 420,
+        "color": 5
+      },
+      "id": "c74669b0-88af-4da7-b3c3-c3f5111eaa19",
+      "name": "Nota de Uso",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        288
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Executar Manualmente": {
+      "main": [
+        [
+          {
+            "node": "Configurar Execução e Prompts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agendar Envio": {
+      "main": [
+        [
+          {
+            "node": "Configurar Execução e Prompts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configurar Execução e Prompts": {
+      "main": [
+        [
+          {
+            "node": "Escolher System Prompt Ativo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Escolher System Prompt Ativo": {
+      "main": [
+        [
+          {
+            "node": "Agente Editorial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente Editorial",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Email Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente Editorial",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente Editorial": {
+      "main": [
+        [
+          {
+            "node": "Resultado da Execução",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "c9541bc7-3734-4fb7-9a4a-dc9d269b0e74",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bf549500f3c181d61fbf8b104624393665cbdc64bbdde6b9ea5b385a49e4c695"
+  },
+  "id": "esf33HyZCyjteAW7",
+  "tags": []
+}
