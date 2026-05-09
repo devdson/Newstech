@@ -1,15 +1,3 @@
-"""
-02_email_tool.py
-================
-
-Ferramenta simples para envio de e-mail em HTML.
-
-Ideia da aula:
-- O agente gera o conteúdo.
-- Esta função apenas envia o conteúdo por e-mail.
-- As credenciais ficam no .env, nunca direto no código.
-"""
-
 from __future__ import annotations
 
 import os
