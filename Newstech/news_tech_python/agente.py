@@ -1,21 +1,3 @@
-"""
-01_agente.py
-============
-
-Objetivo da aula:
-Mostrar que o comportamento do agente muda conforme o prompt escolhido.
-
-Como testar:
-1. Abra o arquivo prompt.py.
-2. Escolha o prompt ativo comentando/descomentando a variável `prompt_ativo`.
-3. Rode no terminal:
-
-   python 01_agente.py
-
-Nesta versão, o código é propositalmente simples.
-O foco da aula é o prompt, não a arquitetura Python.
-"""
-
 from __future__ import annotations
 
 import os
@@ -46,14 +28,7 @@ client = genai.Client(api_key=GEMINI_API_KEY)
 
 
 def gerar_resposta() -> str:
-    """
-    Envia o prompt ativo para o Gemini.
-
-    A única informação adicional enviada aqui é a data,
-    para que o boletim consiga preencher a edição corretamente.
-
-    O restante da inteligência está no prompt.py.
-    """
+   
     data_atual = datetime.now().strftime("%d/%m/%Y")
 
     prompt_final = f"""
